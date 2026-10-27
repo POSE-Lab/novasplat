@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NovaSplat estimates the 6D pose of novel objects without CAD models, using video onboarding and 3D Gaussian Splatting refinement.">
+  <meta name="theme-color" content="#23755c">
+  <meta property="og:title" content="NovaSplat — Model-Free 6D Object Pose Estimation">
+  <meta property="og:description" content="From a short smartphone video to 6D object pose, with 3D Gaussian Splatting onboarding and refinement.">
+  <meta property="og:type" content="website">
+  <title>NovaSplat | Model-Free 6D Object Pose Estimation</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="scenes.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="navigation" aria-label="Main navigation"><a class="wordmark" href="#">NovaSplat<span>↗</span></a><div><a href="#method">Method</a><a href="#results">Results</a><a href="#citation">Citation</a></div></nav>
+<main id="main"
+<header class="hero wrap">
+  <p class="eyebrow">6D OBJECT POSE · 3D GAUSSIAN SPLATTING</p>
+  <h1><span>NovaSplat</span><br>Model-Free 6D Object Pose Estimation via<br class="desktop-break"> 3D Gaussian Splatting Onboarding and Refinement</h1>
+  <div class="authors"><a href="mailto:gfloros@mail.ntua.gr">Georgios Floros</a><a href="mailto:vsartinas@mail.ntua.gr">Evangelos Sartinas</a><a href="mailto:orestisvaggelis@mail.ntua.gr">Orestis Vaggelis</a><a href="mailto:mpateraki@mail.ntua.gr">Maria Pateraki</a></div>
+  <p class="affiliation">National Technical University of Athens</p>
+  <p class="publication">WACV 2027</p>
+  <div class="resources"><a class="button primary" href="assets/novasplat-paper.pdf">↓ Paper <span>PDF</span></a><a class="button" href="https://arxiv.org/abs/2610.13309">↗ arXiv</a><a class="button" href="https://github.com/PosE-Lab/novasplat">⌘ Code</a><a class="button" href="#citation">{ } BibTeX</a></div>
+</header>
+<section class="wrap teaser" aria-labelledby="teaser-title">
+  <h2 id="teaser-title">Model-Free 6D Object Pose Estimation</h2>
+  <p>Given only a short video of a novel object captured during an onboarding phase, estimate its 6D pose in new scenes without any 3D model.</p>
+  <div class="highlights"><div><strong>0.529 <small>AP</small></strong><span>HOPEv2 test set</span></div><div><strong>39.5<small>%</small></strong><span>relative gain in AP<sub>MSSD</sub> over GFreeDet2</span></div><div><strong>3.1<small>×</small></strong><span>faster inference with NovaSplat-Lite</span></div><div><strong>#1</strong><span><a href="https://bop.felk.cvut.cz/leaderboards/modelfree-pose-detection-unseen-bop24/hopev2/">BOP HOPEv2 Leaderboard</a></span><span class="metric-detail">Overall AP · model-free 6D detection</span><span class="metric-detail">Checked 27 October 2026</span></div></div>
+
+
+  <figure class="benchmark-overview"><img src="assets/benchmark-gap.webp" width="1400" height="781" alt="Paper chart comparing model-free and model-based methods: NovaSplat leads on HOPEv2 MSSD and narrows the gap on IndustryShapes."><figcaption>Results from the paper: AP<sub>MSSD</sub> on HOPEv2 and AR<sub>MSSD</sub> averaged over IndustryShapes splits. The shaded area marks the baseline performance gap.</figcaption></figure>
+
+  <div class="example-carousel" role="region" aria-roledescription="carousel" aria-label="NovaSplat pose estimation examples" tabindex="0">
+    <div class="example-viewport"><div class="example-track">
+      <div class="example-page" role="group" aria-roledescription="slide" aria-label="Example group 1 of 3">
+        <img src="assets/scene-1-nova_full.webp" width="480" height="270" alt="NovaSplat pose predictions on HOPEv2">
+        <img src="assets/scene-2-nova_full.webp" width="480" height="270" alt="NovaSplat pose predictions on HOPEv2">
+        <img class="industryshapes-teaser" src="assets/industryshapes-classic.webp" width="160" height="120" alt="NovaSplat pose predictions on IndustryShapes Classic">
+      </div>
+      <div class="example-page" role="group" aria-roledescription="slide" aria-label="Example group 2 of 3" aria-hidden="true">
+        <img src="assets/scene-3-nova_full.webp" width="480" height="270" alt="NovaSplat pose predictions on HOPEv2" loading="lazy">
+        <img class="industryshapes-teaser" src="assets/industryshapes-extended-scene1.webp" width="160" height="120" alt="NovaSplat pose predictions on IndustryShapes Extended" loading="lazy">
+        <img class="industryshapes-teaser" src="assets/industryshapes-extended.webp" width="160" height="120" alt="NovaSplat pose predictions on IndustryShapes Extended" loading="lazy">
+      </div>
+      <div class="example-page" role="group" aria-roledescription="slide" aria-label="Example group 3 of 3" aria-hidden="true">
+        <img class="industryshapes-teaser" src="assets/industryshapes-classic-scene1.webp" width="160" height="120" alt="NovaSplat pose predictions on IndustryShapes Classic" loading="lazy">
+        <img class="industryshapes-teaser" src="assets/industryshapes-extended-scene3.webp" width="160" height="120" alt="NovaSplat pose predictions on IndustryShapes Extended" loading="lazy">
+        <img class="industryshapes-teaser industryshapes-bin" src="assets/industryshapes-classic-bin.webp" width="160" height="120" alt="NovaSplat pose predictions on IndustryShapes Classic" loading="lazy">
+      </div>
+    </div></div>
+    <div class="example-controls" hidden>
+      <div class="example-dots" role="group" aria-label="Choose example group">
+        <button type="button" class="example-dot" aria-label="Show example group 1 of 3" aria-current="true" data-page="0"></button>
+        <button type="button" class="example-dot" aria-label="Show example group 2 of 3" data-page="1"></button>
+        <button type="button" class="example-dot" aria-label="Show example group 3 of 3" data-page="2"></button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="band" id="abstract"><div class="prose wrap"><h2>Abstract</h2><p>6D pose estimation of novel objects without CAD models remains an open challenge: model-free methods must build the object representation from scratch during onboarding and have long trailed their model-based counterparts. We present NovaSplat, a model-free pipeline that closes this gap.</p><p>From a short smartphone video captured at onboarding, we train a 3D Gaussian Splatting (3DGS) model that serves both as a template source for detection and coarse pose estimation and as a differentiable backbone for pose refinement. Our refiner optimizes the object-to-camera pose with combined photometric and geometric losses under a continuous rotation parametrization free of gradient singularities.</p><p>On HOPEv2, NovaSplat surpasses all evaluated model-based methods on overall AP and AP<sub>MSSD</sub>. On IndustryShapes, it outperforms the evaluated model-free competitors while narrowing the gap to model-based methods. NovaSplat-Lite delivers a 3.1× inference speed-up at a cost of only 0.001 AP on HOPEv2.</p></div></section>
+<section class="wrap section" id="video" aria-labelledby="video-title">
+  <h2 id="video-title">Onboarding Video</h2>
+  <video class="project-video" controls playsinline preload="metadata" aria-label="NovaSplat onboarding video">
+    <source src="assets/novasplat-onboarding.mp4" type="video/mp4">
+    Your browser does not support embedded video. <a href="assets/novasplat-onboarding-v11.mp4">Download the onboarding video</a>.
+  </video>
+</section>
+<section class="wrap section" id="method"><h2>Method</h2><p class="section-intro">Our pipeline consists of two stages: onboarding and inference.</p><figure class="pipeline"><a href="assets/pipeline.webp"><img src="assets/pipeline.webp" width="2000" height="1114" loading="lazy" alt="NovaSplat pipeline: video, SfM, 3D Gaussian Splatting and MVS produce templates and geometry; detection, coarse pose estimation and hybrid refinement produce the final pose."></a><figcaption>The NovaSplat pipeline. Onboarding assets are reused for detection, coarse pose estimation, and refinement. Select the figure to view it at full resolution.</figcaption></figure><div class="steps"><article><span>01 / ONBOARD</span><h3>Onboarding</h3><p>Given the video frames and corresponding object masks, we run a classical 3D reconstruction pipeline comprising SfM, Multi-View Stereo (MVS), and 3DGS training to produce a 3D mesh and an optimized 3DGS object representation.</p></article><article><span>02 / ESTIMATE</span><h3>Coarse Pose Estimation</h3><p>Matching visual and geometric descriptors yields a set of 3D-3D correspondences, which are passed to a RANSAC framework to produce the coarse pose.</p></article><article><span>03 / REFINE</span><h3>3DGS-Based Pose Refinement</h3><p>During refinement, the Gaussian parameters are frozen, and only the object-to-camera pose is optimized.</p></article></div></section>
+<section class="band"><div class="wrap section refinement"><div><h2>Effect of Pose Refinement</h2><p>The coarse pose is further refined through a hybrid optimization scheme that jointly considers appearance and geometric cues.</p><p>The backbone of this optimization is the differentiable 3DGS representation learned during onboarding.</p><label for="refinement-slider">Reveal refined predictions</label><input id="refinement-slider" type="range" min="0" max="100" value="50" aria-controls="refinement-image"><button class="button" id="toggle-refinement" type="button" hidden>Pause animation</button><p class="hint">The comparison plays automatically. Adjusting the slider pauses playback.</p></div><figure><div class="comparison" id="refinement-image"><img src="assets/scene-1-nova_cpe.webp" width="480" height="270" loading="lazy" alt="Coarse pose estimates before refinement"><img class="refined" src="assets/scene-1-nova_full.webp" width="480" height="270" loading="lazy" alt="Final pose estimates after NovaSplat refinement"><span class="divider" aria-hidden="true"></span><span class="image-label left">Refined</span><span class="image-label right">Coarse</span></div><figcaption>Same scene and viewpoint; bounding cuboids visualize the predicted poses.</figcaption></figure></div></section>
+<section class="wrap section" id="results"><h2>Quantitative Results</h2><p class="section-intro">Results reported in the paper on household and industrial object benchmarks. Higher scores are better.</p><div class="results-layout results-tables"><div><h3>HOPEv2</h3><p>NovaSplat achieves the highest overall AP and AP<sub>MSSD</sub> among the evaluated methods.</p><div class="table-scroll" tabindex="0" role="region" aria-label="HOPEv2 results, scroll horizontally"><table><caption>HOPEv2 test set · BOP detection protocol</caption><thead><tr><th scope="col">Method</th><th scope="col">CAD</th><th scope="col">AP ↑</th><th scope="col">AP<sub>MSSD</sub> ↑</th><th scope="col">AP<sub>MSPD</sub> ↑</th></tr></thead><tbody>
+<tr><th scope="row">GigaPose</th><td>Yes</td><td>0.167</td><td>0.046</td><td>0.288</td></tr><tr><th scope="row">OPFormer*</th><td>Yes</td><td>0.351</td><td>0.272</td><td>0.431</td></tr><tr><th scope="row">GenFlow</th><td>Yes</td><td>0.411</td><td>0.346</td><td>0.475</td></tr><tr><th scope="row">Co-op (CNOS)</th><td>Yes</td><td>0.477</td><td>0.405</td><td>0.549</td></tr><tr><th scope="row">Co-op (MUSE)</th><td>Yes</td><td>0.514</td><td>0.435</td><td><strong>0.593</strong></td></tr><tr class="group-start"><th scope="row">NeMO</th><td>No</td><td>0.302</td><td>0.291</td><td>0.312</td></tr><tr><th scope="row">OPFormer*</th><td>No</td><td>0.335</td><td>0.243</td><td>0.427</td></tr><tr><th scope="row">GFreeDet2</th><td>No</td><td>0.452</td><td>0.365</td><td>0.538</td></tr><tr class="ours"><th scope="row">NovaSplat</th><td>No</td><td><strong>0.529</strong></td><td><strong>0.509</strong></td><td>0.548</td></tr><tr class="ours"><th scope="row">NovaSplat-Lite</th><td>No</td><td>0.528</td><td><strong>0.509</strong></td><td>0.547</td></tr></tbody></table></div><p class="hint">* OPFormer results from the BOP leaderboard, as reported in the paper. CAD indicates use of a CAD model.</p></div></div>
+<h3 class="industry-title">IndustryShapes</h3><p>NovaSplat leads the evaluated model-free methods on both splits. Model-based methods retain an advantage on these textureless, specular industrial parts.</p><div class="table-scroll" tabindex="0" role="region" aria-label="IndustryShapes results, scroll horizontally"><table><caption>IndustryShapes · BOP localization protocol · selected overall results from Table 2</caption><thead><tr><th scope="col">Method</th><th scope="col">CAD</th><th scope="col">Classic AR ↑</th><th scope="col">Extended AR ↑</th></tr></thead><tbody><tr><th scope="row">FreeZe</th><td>Yes</td><td>0.64</td><td>0.61</td></tr><tr><th scope="row">FoundPose</th><td>Yes</td><td>0.30</td><td>0.28</td></tr><tr><th scope="row">FoundationPose</th><td>Yes</td><td><strong>0.67</strong></td><td><strong>0.69</strong></td></tr><tr class="group-start"><th scope="row">OnePose</th><td>No</td><td>0.07</td><td>0.02</td></tr><tr><th scope="row">OnePose++</th><td>No</td><td>0.14</td><td>0.20</td></tr><tr><th scope="row">FoundationPose</th><td>No</td><td>0.25</td><td>0.33</td></tr><tr class="ours"><th scope="row">NovaSplat</th><td>No</td><td><strong>0.36</strong></td><td><strong>0.40</strong></td></tr></tbody></table></div></section>
+<section class="band"><div class="wrap section"><h2>Qualitative Comparison on HOPEv2</h2>
+<figure><div class="paper-figure-scroll" tabindex="0" role="region" aria-label="Paper Figure 3, scroll horizontally on small screens"><div class="paper-comparison"><img src="assets/scene-1-original.webp" width="480" height="270" loading="lazy" alt="Original, paper comparison row 1">
+<img src="assets/scene-1-nova_full.webp" width="480" height="270" loading="lazy" alt="NovaSplat (Ours), paper comparison row 1">
+<img src="assets/scene-1-gfreedet.webp" width="480" height="270" loading="lazy" alt="GFreeDet2, paper comparison row 1">
+<img src="assets/scene-1-opformer.webp" width="480" height="270" loading="lazy" alt="OPFormer, paper comparison row 1">
+<img src="assets/scene-1-nemo.webp" width="480" height="270" loading="lazy" alt="NeMO, paper comparison row 1">
+<img src="assets/scene-2-original.webp" width="480" height="270" loading="lazy" alt="Original, paper comparison row 2">
+<img src="assets/scene-2-nova_full.webp" width="480" height="270" loading="lazy" alt="NovaSplat (Ours), paper comparison row 2">
+<img src="assets/scene-2-gfreedet.webp" width="480" height="270" loading="lazy" alt="GFreeDet2, paper comparison row 2">
+<img src="assets/scene-2-opformer.webp" width="480" height="270" loading="lazy" alt="OPFormer, paper comparison row 2">
+<img src="assets/scene-2-nemo.webp" width="480" height="270" loading="lazy" alt="NeMO, paper comparison row 2">
+<img src="assets/scene-3-original.webp" width="480" height="270" loading="lazy" alt="Original, paper comparison row 3">
+<img src="assets/scene-3-nova_full.webp" width="480" height="270" loading="lazy" alt="NovaSplat (Ours), paper comparison row 3">
+<img src="assets/scene-3-gfreedet.webp" width="480" height="270" loading="lazy" alt="GFreeDet2, paper comparison row 3">
+<img src="assets/scene-3-opformer.webp" width="480" height="270" loading="lazy" alt="OPFormer, paper comparison row 3">
+<img src="assets/scene-3-nemo.webp" width="480" height="270" loading="lazy" alt="NeMO, paper comparison row 3">
+<span class="paper-column-label">Original</span><span class="paper-column-label">NovaSplat (Ours)</span><span class="paper-column-label">GFreeDet2</span><span class="paper-column-label">OPFormer</span><span class="paper-column-label">NeMO</span></div></div><figcaption>Qualitative comparison on the HOPEv2 dataset (Figure 3). NovaSplat robustly estimates poses in cluttered scenes with heavy occlusions, outperforming competing model-free methods. Bounding cuboids highlight the predicted 6D poses.</figcaption></figure>
+<!-- Previous selector layout preserved for comparison. To restore, replace the
+active Additional Scenes block below with this markup and re-enable its JS block.
+<div id="additional-scenes" hidden><h3 class="industry-title">Additional Scenes</h3><div class="gallery-controls"><label for="scene-select">HOPEv2 scene</label><select id="scene-select"></select></div><div class="paper-figure-scroll" tabindex="0" role="region" aria-label="Additional scene comparison, scroll horizontally on small screens"><div class="gallery" id="gallery"></div></div><p id="gallery-status" class="hint" aria-live="polite"></p></div>
+-->
+<div id="additional-scenes" hidden>
+  <h3 class="industry-title">Additional Scenes</h3>
+  <div class="scenes-scroll" id="scenes-scroll" tabindex="0" role="region" aria-label="Additional HOPEv2 comparisons, scroll vertically for more scenes">
+    <div class="scenes-column-headings" id="scenes-column-headings" aria-hidden="true"></div>
+    <div id="scenes-list"></div>
+  </div>
+</div>
+</div></section>
+<section class="wrap section citation" id="citation"><div class="citation-heading"><div><h2>BibTeX</h2></div><button class="button" id="copy-citation" type="button" hidden>Copy BibTeX</button></div><pre tabindex="0"><code id="bibtex">@inproceedings{floros2027novasplat,
+  title   = {NovaSplat: Model-Free 6D Object Pose Estimation via
+             3D Gaussian Splatting Onboarding and Refinement},
+  author  = {Floros, Georgios and Sartinas, Evangelos and
+             Vaggelis, Orestis and Pateraki, Maria},
+  booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+  year    = {2027},
+  url     = {https://arxiv.org/abs/2610.13309}
+}</code></pre><p id="copy-status" class="hint" role="status"></p></section>
+</main>
+<footer class="wrap">
+  <p>This website is licensed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+  <p>This means you are free to borrow the <a href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website, we just ask that you link back to this page in the footer. Please remember to remove the analytics code included in the header of the website which you do not want on your website.</p>
+</footer>
+</body>
+</html>
