@@ -1,0 +1,18 @@
+line-length = 88
+target-version = "py312"
+exclude = [
+  "thirdparty/bop_toolkit",
+  "thirdparty/cnos25",
+  "thirdparty/colmap",
+  "thirdparty/dinov3",
+  "thirdparty/gedi",
+  "thirdparty/gsplat",
+  "thirdparty/openmvs",
+  "thirdparty/sam3",
+  "thirdparty/vcg",
+  ".git",
+  ".venv",
+  "venv",
+  "build",
+  "dist",
+]

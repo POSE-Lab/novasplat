@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+output/
+*.log
+
+# Build artifacts
+thirdparty/colmap/build/
+thirdparty/openmvs/make/
+thirdparty/bop_toolkit/build/
+thirdparty/**/.pytest_cache/
+thirdparty/**/__pycache__/

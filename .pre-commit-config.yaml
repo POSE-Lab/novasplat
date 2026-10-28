@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^thirdparty/(bop_toolkit|cnos25|colmap|dinov3|gedi|gsplat|openmvs|sam3|vcg)/
+      - id: ruff-format
+        exclude: ^thirdparty/(bop_toolkit|cnos25|colmap|dinov3|gedi|gsplat|openmvs|sam3|vcg)/

@@ -1,0 +1,14 @@
+ultralyticsmodel:
+  _target_: ultralytics.YOLOE
+  model: ${local.yoloe_checkpoint}
+
+model: # wrapper
+  _target_: src.model.proposal.yoloe.YoloE
+  ultralyticsmodel: ${..ultralyticsmodel}
+  text_prompts: "${data.datasets[${dataset_name}].prompts}"
+  cfg:
+    rotate_input_images: []
+    keep_n_top_confident_proposals: 40
+    conf_thresh: 0.02
+    device: ${local.device}
+    verbose: False

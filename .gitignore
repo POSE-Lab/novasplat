@@ -1,0 +1,16 @@
+# Secrets
+hf_token.txt
+.env
+
+# Python / tooling
+**/__pycache__/
+.ruff_cache/
+
+# Outputs
+output/
+
+# CNOS25 model weights and outputs (downloaded / generated locally)
+thirdparty/cnos25/models/
+thirdparty/cnos25/outputs/
+thirdparty/cnos25/viz*
+thirdparty/cnos25/mobileclip_blt.ts

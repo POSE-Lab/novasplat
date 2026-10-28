@@ -1,0 +1,39 @@
+# Derived from https://github.com/Vision-Kek/cnos25 (commit d92e3d3, MIT License; see thirdparty/cnos25/LICENSE).
+# Modified by POSE-Lab, National Technical University of Athens (NovaSplat), 2026.
+root_dir: ${local.bop_data_root}
+source_url: https://bop.felk.cvut.cz/media/data/bop_datasets/
+unzip_mode: unzip
+
+reference_dataloader:
+  _target_: src.dataloader.bop.BOPTemplate
+  template_dir: ${..root_dir}/${dataset_name}/templates
+  num_imgs_per_obj: 336
+  obj_ids:  # set at runtime
+  image_size: 256
+
+query_dataloader:
+  _target_: src.dataloader.bop.BOPTest
+  root_dir: ${..root_dir}/
+  split: ${split}
+  reset_metaData: True
+
+datasets:
+  hot3d:
+    n_objects: 33
+    obj_names: ["holder_black", "bowl", "plate_bamboo", "spoon_wooden", "potato_masher", "spatula_red", "coffee_pot", "mug_patterned", "mug_white", "can_soup", "can_parmesan", "can_tomato_sauce", "bottle_mustard", "bottle_bbq", "bottle_ranch", "vase", "carton_milk", "carton_oj", "flask", "food_waffles", "food_vegetables", "dumbbell_5lb", "aria_small", "cellphone", "box_wooden", "birdhouse_toy", "dino_toy", "keyboard", "whiteboard_eraser", "puzzle_toy", "mouse", "whiteboard_marker", "dvd_remote"]
+    prompts: ${.obj_names}
+
+  handal:
+    n_objects: 40
+    obj_names: ["hammer_01", "hammer_blue_02", "hammer_yellow", "hammer_black_04", "hammer_red_05", "hammer_red_06", "hammer_blue_07", "hammer_08", "hammer_black_09", "spatula_green_10", "spatula_red_11", "spatula_green_12", "spatula_pink", "ladle_pink", "ladle_ghost", "ladle_blue", "ladle_yellow", "ladle_white", "ladle_orange", "power_drill_by_20", "power_drill_by_21", "power_drill_oran_22", "power_drill_oran_23", "power_drill_red_24", "power_drill_red_25", "spatula_purple", "spatula_magenta", "spatula_oran", "spatula_cyan", "strainer_small", "strainer_long", "strainer_lgreen", "strainer_blue", "strainer_plastic", "whisk_wood", "whisk_black_36", "whisk_green", "whisk_black_38", "whisk_red", "whisk_yellow"]
+    prompts: ["hammer with colored handle", "colored power drill", "colored ladle", "colored strainer", "spatula with handle", "whisk with handle"]
+
+  hopev2:
+    n_objects: 28
+    obj_names: [ "AlphabetSoup", "BBQSauce", "Butter", "Cherries", "ChocolatePudding", "Cookies", "Corn", "CreamCheese", "GranolaBars", "GreenBeans", "Ketchup", "Macaroni&Cheese", "Mayo", "Milk", "Mushrooms", "Mustard", "OrangeJuice", "Parmesan", "Peaches", "Peas&Carrots", "Pineapple", "Popcorn", "Raisins", "SaladDressing", "Spaghetti", "TomatoSauce", "Tuna", "Yogurt" ]
+    prompts: [ "bottle", "snack", "tin can", "yoghurt", "seasoning", "popcorn", "mustard", "ketchup", "cheese", "juice", "milk", "box", "package", "container" ]
+
+  lmo:  # Example for BOP-Classic dataset
+    n_objects: 15
+    obj_names: [obj_000001, obj_000002, obj_000003, obj_000004, obj_000005, obj_000006, obj_000007, obj_000008, obj_000009, obj_000010, obj_000011, obj_000012, obj_000013, obj_000014, obj_000015]
+    prompts: [toy, tool]

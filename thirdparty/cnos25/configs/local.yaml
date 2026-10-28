@@ -1,0 +1,14 @@
+# Derived from https://github.com/Vision-Kek/cnos25 (commit d92e3d3, MIT License; see thirdparty/cnos25/LICENSE).
+# Modified by POSE-Lab, National Technical University of Athens (NovaSplat), 2026.
+# specific attributes to this machine
+# Paths are relative to thirdparty/cnos25 (the scripts run from there).
+# Adjust them, or override on the command line, e.g. local.bop_data_root=/data/bop
+local:
+  bop_data_root: /path/to/bop_datasets
+  dinov3_repo: ../dinov3
+  dinov3_checkpoint: models/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth
+  yoloe_checkpoint: models/yoloe-11l-seg.pt
+  bop_toolkit_repo: ../bop_toolkit
+
+  num_workers: 24
+  device: cuda

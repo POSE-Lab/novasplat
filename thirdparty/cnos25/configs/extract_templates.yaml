@@ -1,0 +1,11 @@
+dataset_name: ???
+onboarding: static
+
+defaults:
+  - data: bop
+  - model/descriptor@descriptor_model: dinov3
+  - local
+  - _self_
+
+out_file: # optional, default is descriptor_model.cfg.cache_file
+overwrite: False

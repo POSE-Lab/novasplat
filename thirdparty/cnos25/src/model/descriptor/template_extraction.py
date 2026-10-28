@@ -1,0 +1,109 @@
+# Derived from https://github.com/Vision-Kek/cnos25 (commit d92e3d3, MIT License; see thirdparty/cnos25/LICENSE).
+# Modified by POSE-Lab, National Technical University of Athens (NovaSplat), 2026.
+import hydra
+from hydra import compose, initialize_config_dir
+from hydra.core.hydra_config import HydraConfig
+from omegaconf import OmegaConf
+import torch
+import PIL
+from PIL import Image
+import logging
+import os
+import os.path as osp
+from collections import defaultdict
+from tqdm import tqdm
+
+class TemplateEmbExtraction:
+    def __init__(self, ref_dataloader, dataset_name, obj_names, out_dir=None):
+        self.obj_names = obj_names
+        self.dataset_name = dataset_name
+        self.ref_dataset = ref_dataloader
+
+        self.ref_images = {} # The cropped templates extracted
+        self.ref_masks = {} # The corresponding masks
+        self.ref_descriptors = defaultdict(list) # The resulting template embeddings; key e.g. bb_patch_objname
+        self.ref_img_pths = {} # key: objname, val: the image path that was sampled by ref_dataset
+
+        if out_dir is None: self.out_dir = osp.join(self.ref_dataset.template_dir, 'descriptors')
+        if not osp.exists(self.out_dir):
+            logging.info(f'Creating descriptor output dir {self.out_dir}.')
+            os.makedirs(self.out_dir, exist_ok=True)
+
+    def set_ref_images(self, cancel_after=None):
+        obj_ids = list(self.ref_dataset.obj_ids)
+        expected_ids = list(range(1, len(self.obj_names) + 1))
+        assert obj_ids == expected_ids, (
+            f"Template directory for '{self.dataset_name}' contains objects "
+            f"{obj_ids}, but a contiguous set {expected_ids} is required "
+            f"({len(self.obj_names)} obj_names configured). CNOS keys descriptors "
+            f"by position, so every obj_id 1..N needs exactly one rendered "
+            f"template directory. Re-run onboarding for the missing objects and "
+            f"delete the stale descriptor cache before re-extracting."
+        )
+
+        logging.info(f'Setting reference images for {self.obj_names}')
+        for i, (obj_id, ref_sample) in enumerate(zip(obj_ids, self.ref_dataset)):
+            object_class = self.obj_names[obj_id - 1]
+            # cache_template_images: store image name indices, too, which makes it easier to post-verify features
+            self.ref_img_pths[object_class] = ref_sample["image_paths"]
+            self.ref_images[object_class] = ref_sample["templates"]
+            self.ref_masks[object_class] = ref_sample["template_masks"].cpu()
+            logging.info(f'done {i+1}/{len(obj_ids)} (obj_{obj_id:06d} -> {object_class})')
+            if cancel_after and (i+1) >= cancel_after: break
+
+    def save(self, out_file, overwrite=False):
+        out_pth = osp.join(self.out_dir, out_file)
+        if osp.exists(out_pth) and not overwrite: raise FileExistsError('Pass overwrite=True if you really want to.')
+        ref_sample_embeds = {k: v.cpu() for k, v in tqdm(self.ref_descriptors.items())}
+        data_to_save = {
+            'template_embeds': ref_sample_embeds,
+            'template_imgs': self.ref_img_pths,
+            'template_masks': self.ref_masks,
+        }
+        # save to file so you can reload them later without recomputing
+        logging.info(f'Saving to {out_pth}.')
+        torch.save(data_to_save, out_pth)
+
+    def check_saved(self, out_file, dino_with_bb_anb_patch_feats=True, verbose=1):
+        out_pth = osp.join(self.out_dir, out_file)
+        logging.info(f'opening {out_pth} of size {osp.getsize(out_pth)/1e6:.1f}M')
+        x = torch.load(out_pth, map_location=torch.device('cpu'), weights_only=False)
+        logging.info(f'entries in saved file: { {k:len(v) for k,v in x.items()} }')
+        assert 'template_embeds' in x.keys(), x.keys()
+        if dino_with_bb_anb_patch_feats and verbose > 1:
+            embs_dict = x['template_embeds']
+            n_objects = len(embs_dict) / 2
+            sample = next(iter(embs_dict.values()))
+            logging.info(sample.shape)
+            k, p, d = sample.view(sample.shape[0], -1, sample.shape[-1]).shape
+            logging.info(f"{n_objects} objects with {k} templates each, dict size "
+                  f"{n_objects * (2 * k * p * d + 2 * k * d) / 1e6:.1f}M * {sample.dtype}")
+            logging.info('keys | length | shape')
+            for k, v in embs_dict.items():
+                logging.info(f"{k, len(v), v[0].shape}")
+
+    def delete(self, out_file):
+        out_pth = osp.join(self.out_dir, out_file)
+        logging.info(f'Removing {out_pth}.')
+        os.remove(out_pth)
+
+
+class DinoTemplateExtraction(TemplateEmbExtraction):
+    def __init__(self, descriptor_model, ref_dataloader, obj_names, dataset_name):
+        super().__init__(ref_dataloader, dataset_name, obj_names)
+
+        self.descriptor_model = hydra.utils.instantiate(descriptor_model.model)
+
+    def calc_ref_embs(self):
+        # Iterate over object classes (n)
+        for class_name, template_imgs in tqdm(self.ref_images.items(), desc="Computing template descriptors ..."):
+            assert isinstance(template_imgs[0], PIL.Image.Image), f'got {type(template_imgs[0])}'
+
+            # processing
+            template_img_tensors = torch.stack([self.descriptor_model.rgb_normalize(im) for im in template_imgs])
+            template_img_tensors = template_img_tensors.to(self.descriptor_model.device)
+            # forward
+            res = self.descriptor_model.chunked_fwd(template_img_tensors)
+
+            self.ref_descriptors['x_norm_clstoken_' + class_name] = res['x_norm_clstoken']
+            self.ref_descriptors['x_norm_patchtokens_' + class_name] = res['x_norm_patchtokens']
